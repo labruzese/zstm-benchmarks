@@ -275,12 +275,7 @@ pub const Disjoint = struct {
                 reads = 0;
             }
 
-            // NB: upstream writes `if (i && 0x1)` where `i & 0x1` was plainly
-            // intended, so the condition is true for every i != 0. We reproduce
-            // the bug deliberately -- "fixing" it here would change the
-            // read/write mix on the Zig side only and invalidate the whole
-            // comparison. See README.md.
-            const should_write = if (i != 0 and 0x1 != 0)
+            const should_write = if (i & 0x1 != 0)
                 writes < writes_per_ten
             else
                 !(reads < reads_per_ten);
