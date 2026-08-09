@@ -1,21 +1,5 @@
 //! A port of RSTM v7's `bench/bmharness.cpp` to Zig, driving zstm instead of
 //! libstm.
-//!
-//! Deliberate deviations from the C++ original
-//!
-//!   1. RSTM ends a timed run with `alarm()` + a SIGALRM handler that clears
-//!      `CFG.running`. We use a dedicated timer thread that sleeps for the
-//!      duration and then clears the same flag. Both are "flip a flag the run
-//!      loop polls"; the timer thread is just easier to reason about across
-//!      threads. It sleeps rather than spins, so it does not compete for a core.
-//!
-//!   2. RSTM reports per-thread abort counts from libstm's internal profiling.
-//!      zstm's `Tx.run` hides its retry loop, so we drive the transaction with
-//!      zstm's explicit `txBegin`/`txCommit`/`reset` API — which `root.zig`
-//!      documents as public and supported — and count retries ourselves. The
-//!      loop below is step-for-step identical to `Tx.run`; the only addition is
-//!      an increment on the abort path, which never executes on a successful
-//!      commit and so does not affect the measured fast path.
 
 const std = @import("std");
 const builtin = @import("builtin");
@@ -56,9 +40,7 @@ pub fn getElapsedTime() u64 {
     return @as(u64, @intCast(ts.sec)) * 1_000_000_000 + @as(u64, @intCast(ts.nsec));
 }
 
-/// Verbatim port of `rand_r_32` (rstm/alt-license/rand_r_32.h). Reproducing the
-/// exact generator matters more than its statistical quality: it is what makes
-/// the two implementations walk the same sequence of array indices.
+/// Verbatim port of `rand_r_32` (rstm/alt-license/rand_r_32.h).
 pub fn randR32(seed: *u32) u32 {
     var next: u32 = seed.*;
     var result: u32 = undefined;
