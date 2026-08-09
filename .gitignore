@@ -1,0 +1,12 @@
+build/
+*.configure.log
+*.build.log
+zig-out/
+.zig-cache/
+.venv/
+toolchain/zig
+__pycache__/
+
+# stray caches from building inside vendored trees
+vendor/zstm/.zig-cache/
+vendor/zstm/zig-out/
