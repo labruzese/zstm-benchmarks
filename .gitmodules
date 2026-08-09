@@ -1,0 +1,3 @@
+[submodule "vendor/zstm"]
+	path = vendor/zstm
+	url = https://github.com/labruzese/zstm.git
