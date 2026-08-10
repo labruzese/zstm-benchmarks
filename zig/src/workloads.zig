@@ -92,7 +92,9 @@ pub const ReadNWrite1 = struct {
 
     pub fn init(gpa: std.mem.Allocator) !void {
         matrix = try gpa.alloc(TxWord, cfg.elements);
-        for (matrix) |*w| w.* = .init(0);
+        // match ReadNWrite1Bench.cpp's bench_init exactly
+        var s: u32 = 1;
+        for (matrix) |*w| w.* = .init(harness.randR32(&s));
     }
 
     fn body(t: *zstm.Tx, seed: *u32) zstm.Error!void {
@@ -146,7 +148,9 @@ pub const ReadWriteN = struct {
 
     pub fn init(gpa: std.mem.Allocator) !void {
         matrix = try gpa.alloc(TxWord, cfg.elements);
-        for (matrix) |*w| w.* = .init(0);
+        // match ReadWriteNBench.cpp's bench_init
+        var s: u32 = 1;
+        for (matrix) |*w| w.* = .init(harness.randR32(&s));
     }
 
     fn body(t: *zstm.Tx, seed: *u32) zstm.Error!void {

@@ -58,6 +58,9 @@
 #cmakedefine STM_PROTECT_STACK
 #cmakedefine STM_ABORT_ON_THROW
 
+// Defined when stm::begin/stm::commit should maintain TxThread::total_nontxn_time. 
+#cmakedefine STM_ADAPTIVITY_TIMING
+
 // Defined when we want to optimize for SSE execution
 #cmakedefine STM_USE_SSE
 

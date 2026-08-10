@@ -53,6 +53,11 @@ BENCH_ELEM_T* matrix;
 void bench_init()
 {
     matrix = (BENCH_ELEM_T*)malloc(CFG.elements*sizeof(BENCH_ELEM_T));
+
+    // ZSTM: patched to actually init the array
+    uint32_t s = 1;
+    for (uint32_t i = 0; i < CFG.elements; ++i)
+        matrix[i] = (BENCH_ELEM_T)rand_r_32(&s);
 }
 
 /*** Run a bunch of random transactions */

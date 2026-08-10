@@ -88,8 +88,12 @@ namespace stm
       // transactional time.  This code suffices, because it gets the time
       // between transactions.  If we need the time for a single transaction,
       // we can run ProfileTM
+      //
+      // BENCHMARK PATCH: compiled out by -Dlibstm_enable_adaptivity_timing=OFF.
+#ifdef STM_ADAPTIVITY_TIMING
       if (tx->end_txn_time)
           tx->total_nontxn_time += (tick() - tx->end_txn_time);
+#endif
 
       // now call the per-algorithm begin function
       TxThread::tmbegin(tx);
@@ -120,7 +124,10 @@ namespace stm
       tx->scope = NULL;
 
       // record start of nontransactional time
+      // BENCHMARK PATCH: see the matching #ifdef in begin().
+#ifdef STM_ADAPTIVITY_TIMING
       tx->end_txn_time = tick();
+#endif
   }
 
   /**

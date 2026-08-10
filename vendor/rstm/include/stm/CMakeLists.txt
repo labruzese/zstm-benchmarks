@@ -88,6 +88,11 @@ if (libstm_enable_cancel_and_throw)
   set(STM_ABORT_ON_THROW 1)
 endif ()
 
+# Configure the adaptivity timing in stm::begin/stm::commit.
+if (libstm_enable_adaptivity_timing)
+  set(STM_ADAPTIVITY_TIMING 1)
+endif ()
+
 # Configure sse
 if (libstm_use_sse)
   set(STM_USE_SSE 1)

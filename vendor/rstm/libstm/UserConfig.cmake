@@ -184,6 +184,25 @@ cmake_dependent_option(
   "NOT rstm_enable_itm2stm" ON)
 mark_as_advanced(libstm_enable_cancel_and_throw)
 
+## Overhead: stm::begin and stm::commit each call tick() -- an rdtsc on x86 --
+##           to maintain TxThread::total_nontxn_time. That figure has exactly
+##           two consumers: the stats line in sys_shutdown(), and the adaptive
+##           policy decider in libstm/policies/policies.hpp. Pinning an
+##           algorithm with the STM_CONFIG envvar means the decider never runs,
+##           so for a fixed-algorithm benchmark the two rdtsc's per transaction
+##           are pure overhead
+##
+##           ON (default) keeps upstream behavior. Turn it OFF to measure the
+##           STM algorithm more fairly with the zig harness.
+##
+##       NB: this is deliberately NOT folded into libstm_adaptation_points,
+##           which selects the ProfileTM Trigger type and leaves these two
+##           call sites untouched.
+option(
+  libstm_enable_adaptivity_timing
+  "ON (DEFAULT) to time non-transactional work for the adaptive policy" ON)
+mark_as_advanced(libstm_enable_adaptivity_timing)
+
 ## Overhead: The use of SSE instructions is on for x86, but can be turned
 ##           off.  This also forces SSE support off for sparc.
 cmake_dependent_option(

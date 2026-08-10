@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 #
-# Build RSTM v7's microbenchmarks in two element-type configurations:
+# Build RSTM v7's microbenchmarks in three configurations:
 #
-#   build/rstm-int   stock: array elements are `int` (sub-word on x86-64)
-#   build/rstm-word  elements are `intptr_t`, matching zstm's usize-sized TxWord
+#   build/rstm-int      stock: array elements are `int` (sub-word on x86-64)
+#   build/rstm-word     elements are `intptr_t`, matching zstm's usize TxWord
+#   build/rstm-word-na  as rstm-word, minus the adaptivity timing
 #
-# Both produce <Bench>SSB64 binaries under bench/. The STM algorithm is chosen
-# at *run* time via the STM_CONFIG env var (NOrec, CGL, ...), not at build time.
+# The first two differ only in element width (see bench/bench_elem.hpp). 
+#
+# The third additionally compiles out the two rdtsc's that stm::begin/stm::commit
+# execute per transaction to feed the adaptive policy decider -- which never
+# runs, because STM_CONFIG pins one algorithm for the whole process.
+#
+# All produce <Bench>SSB64 binaries under bench/. The STM algorithm is chosen
+# at via the STM_CONFIG env var (NOrec, CGL, ...).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -32,15 +39,24 @@ configure_and_build() {
 mkdir -p build
 # NB: the element type is selected with -Dbench_word_elements, never with
 # -DCMAKE_CXX_FLAGS -- setting the latter on the command line replaces the flags
-# RSTM configures in cmake/UserOverrides.cmake (-march=native -O3 ...), silently
-# building one variant without optimization flags the other one gets.
-configure_and_build build/rstm-int  -Dbench_word_elements=OFF
-configure_and_build build/rstm-word -Dbench_word_elements=ON
+# RSTM configures in cmake/UserOverrides.cmake (-march=native -O3 ...)
+configure_and_build build/rstm-int     -Dbench_word_elements=OFF
+configure_and_build build/rstm-word    -Dbench_word_elements=ON
+configure_and_build build/rstm-word-na -Dbench_word_elements=ON \
+                                       -Dlibstm_enable_adaptivity_timing=OFF
 
-for d in build/rstm-int build/rstm-word; do
+# Just check that adaptivity-timing option has to actually taken effect
+if cmp -s build/rstm-word/bench/CounterBenchSSB64 \
+          build/rstm-word-na/bench/CounterBenchSSB64; then
+    echo "ERROR: rstm-word and rstm-word-na produced identical binaries;" >&2
+    echo "       libstm_enable_adaptivity_timing did not take effect." >&2
+    exit 1
+fi
+
+for d in build/rstm-int build/rstm-word build/rstm-word-na; do
     for b in CounterBench ReadNWrite1Bench ReadWriteNBench DisjointBench; do
         test -x "$d/bench/${b}SSB64" || { echo "MISSING: $d/bench/${b}SSB64"; exit 1; }
     done
 done
 
-echo "RSTM built: build/rstm-int, build/rstm-word"
+echo "RSTM built: build/rstm-int, build/rstm-word, build/rstm-word-na"
