@@ -13,20 +13,22 @@ import collections
 import csv
 import pathlib
 import statistics
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "results" / "raw.csv"
 OUT = ROOT / "results" / "tables.md"
 
-# Reference config for the ratio column: RSTM NOrec with the adaptivity rdtsc's
-# compiled out, so the ratio reflects the algorithms rather than the framework
-# around them. Falls back to the stock word build when that config is absent.
-BASELINE = ["rstm-word-na-norec", "rstm-word-norec"]
+BASELINE = ["rstm-norec", "rstm-word-na-norec", "rstm-word-norec"]
 
-CONFIG_ORDER = ["zstm-ala", "rstm-word-norec", "rstm-word-na-norec",
-                "rstm-int-norec", "rstm-word-cgl"]
+CONFIG_ORDER = ["zstm-ala", "rstm-norec", "rstm-cgl",
+                # older labels, not used anymore
+                "rstm-word-norec", "rstm-word-na-norec", "rstm-int-norec",
+                "rstm-word-cgl"]
 CONFIG_LABEL = {
     "zstm-ala": "zstm (ALA)",
+    "rstm-norec": "RSTM NOrec",
+    "rstm-cgl": "RSTM CGL",
     "rstm-word-norec": "RSTM NOrec (word)",
     "rstm-word-na-norec": "RSTM NOrec (word, no adapt)",
     "rstm-int-norec": "RSTM NOrec (int)",
@@ -92,6 +94,15 @@ def main():
             seen.add(r["bench"])
             benches.append(r["bench"])
     thread_counts = sorted({int(r["threads"]) for r in rows})
+    # Renaming a config in run-matrix.py without renaming it here used to drop
+    # the column from every table without a word of warning. Fail instead.
+    unknown = sorted({r["config"] for r in rows} - set(CONFIG_ORDER))
+    if unknown:
+        sys.exit(f"raw.csv has config(s) missing from CONFIG_ORDER/CONFIG_LABEL: "
+                 f"{', '.join(unknown)}\n"
+                 f"Add them here (a rename in run-matrix.py needs the same "
+                 f"rename in this file) -- otherwise they vanish from the tables.")
+
     configs = [c for c in CONFIG_ORDER if any(r["config"] == c for r in rows)]
     trials = len({r["trial"] for r in rows})
 

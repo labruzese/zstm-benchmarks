@@ -123,11 +123,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # (label, kind, build-dir-or-None, STM_CONFIG-or-None)
 CONFIGS = [
-    ("zstm-ala",          "zstm", None,                 None),
-    # ("rstm-word-norec",   "rstm", "build/rstm-word",    "NOrec"),
+    ("zstm-ala",  "zstm", None,                 None),
     ("rstm-norec", "rstm", "build/rstm-word-na", "NOrec"),
-    # ("rstm-int-norec",    "rstm", "build/rstm-int",     "NOrec"),
-    ("rstm-cgl",     "rstm", "build/rstm-word",    "CGL"),
+    ("rstm-cgl",   "rstm", "build/rstm-word-na", "CGL"),
 ]
 
 # (cell label, zig workload name, rstm binary stem, extra args)

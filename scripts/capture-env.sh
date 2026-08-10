@@ -28,7 +28,7 @@ if [ -n "${ZIG:-}" ]; then :; elif [ -x toolchain/zig ]; then ZIG=./toolchain/zi
     echo "zig: $("$ZIG" version)"
     echo
     echo "## Compile flags"
-    for d in rstm-word rstm-int; do
+    for d in rstm-word-na rstm-word rstm-int; do
         f="build/$d/bench/CMakeFiles/CounterBenchSSB64.dir/flags.make"
         if [ -f "$f" ]; then
             echo "RSTM $d flags:   $(grep -m1 'CXX_FLAGS' "$f" | sed 's/CXX_FLAGS = //')"
