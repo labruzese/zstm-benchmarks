@@ -1,4 +1,4 @@
-_Median of 5 trials. Throughput in committed transactions/second; higher is better._
+_Median of 5 trials. Throughput in committed transactions/second; higher is better. The small figure under each cell is that cell's max/min across trials -- `!` marks 1.25x or worse, where the run was too noisy for the median to mean much._
 
 
 ## Throughput
@@ -6,116 +6,106 @@ _Median of 5 trials. Throughput in committed transactions/second; higher is bett
 
 ### Counter
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL | zstm vs RSTM NOrec (word) |
-|---:|---:|---:|---:|---:|---:|
-| 1 | 108,331,637 | 30,855,875 | 32,777,385 | 43,151,117 | 3.51x |
-| 2 | 20,487,248 | 8,669,247 | 7,699,451 | 27,315,242 | 2.36x |
-| 4 | 10,463,786 | 8,405,461 | 4,628,138 | 17,531,740 | 1.24x |
-| 8 | 6,552,120 | 3,288,284 | 3,087,511 | 14,030,696 | 1.99x |
-| 16 | 4,741,163 | 3,668,592 | 2,431,207 | 9,747,145 | 1.29x |
-| 24 | 4,711,463 | 1,996,808 | 1,911,438 | 13,591,158 | 2.36x |
+| threads | zstm (ALA) | zstm vs RSTM |
+|---:|---:|---:|
+| 1 | 106,530,303<br><sub>1.06x</sub> | -- |
+| 2 | 18,561,661<br><sub>1.19x</sub> | -- |
+| 4 | 12,005,023<br><sub>1.19x</sub> | -- |
+| 8 | 6,656,899<br><sub>1.05x</sub> | -- |
+| 16 | 4,681,060<br><sub>1.17x</sub> | -- |
 
 ### ReadNWrite1/m256
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL | zstm vs RSTM NOrec (word) |
-|---:|---:|---:|---:|---:|---:|
-| 1 | 49,001,372 | 15,261,217 | 16,531,264 | 24,894,742 | 3.21x |
-| 2 | 14,352,422 | 7,688,961 | 7,444,710 | 22,436,792 | 1.87x |
-| 4 | 11,789,351 | 5,046,864 | 4,773,879 | 20,061,774 | 2.34x |
-| 8 | 8,473,177 | 3,412,335 | 3,203,242 | 17,566,594 | 2.48x |
-| 16 | 7,410,860 | 2,582,833 | 2,474,280 | 10,161,103 | 2.87x |
-| 24 | 4,190,681 | 2,178,011 | 2,078,596 | 11,814,987 | 1.92x |
+| threads | zstm (ALA) | zstm vs RSTM |
+|---:|---:|---:|
+| 1 | 47,135,757<br><sub>1.01x</sub> | -- |
+| 2 | 13,249,858<br><sub>1.16x</sub> | -- |
+| 4 | 8,571,940<br><sub>!1.44x</sub> | -- |
+| 8 | 8,355,629<br><sub>1.07x</sub> | -- |
+| 16 | 7,271,555<br><sub>1.03x</sub> | -- |
 
 ### ReadNWrite1/m4096
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL | zstm vs RSTM NOrec (word) |
-|---:|---:|---:|---:|---:|---:|
-| 1 | 48,969,029 | 18,119,016 | 13,795,086 | 24,635,573 | 2.70x |
-| 2 | 14,649,194 | 8,311,364 | 8,082,709 | 21,176,715 | 1.76x |
-| 4 | 10,298,199 | 5,375,844 | 5,260,360 | 18,140,339 | 1.92x |
-| 8 | 7,528,382 | 3,811,273 | 3,699,218 | 14,741,296 | 1.98x |
-| 16 | 6,626,840 | 2,873,209 | 2,754,939 | 12,163,890 | 2.31x |
-| 24 | 3,799,384 | 2,189,320 | 2,170,633 | 9,153,596 | 1.74x |
+| threads | zstm (ALA) | zstm vs RSTM |
+|---:|---:|---:|
+| 1 | 47,099,254<br><sub>1.01x</sub> | -- |
+| 2 | 13,624,692<br><sub>1.14x</sub> | -- |
+| 4 | 10,677,980<br><sub>!1.26x</sub> | -- |
+| 8 | 7,444,399<br><sub>1.01x</sub> | -- |
+| 16 | 6,551,930<br><sub>1.05x</sub> | -- |
 
 ### ReadWriteN/m256
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL | zstm vs RSTM NOrec (word) |
-|---:|---:|---:|---:|---:|---:|
-| 1 | 19,768,267 | 16,339,949 | 10,289,213 | 22,372,597 | 1.21x |
-| 2 | 8,276,734 | 6,339,767 | 4,593,389 | 19,858,174 | 1.31x |
-| 4 | 4,916,875 | 3,917,965 | 3,884,924 | 18,980,508 | 1.25x |
-| 8 | 3,005,849 | 2,767,452 | 2,659,137 | 16,483,290 | 1.09x |
-| 16 | 2,317,433 | 2,146,943 | 2,231,286 | 11,114,436 | 1.08x |
-| 24 | 1,993,789 | 1,961,401 | 2,138,046 | 11,496,550 | 1.02x |
+| threads | zstm (ALA) | zstm vs RSTM |
+|---:|---:|---:|
+| 1 | 26,858,221<br><sub>1.03x</sub> | -- |
+| 2 | 7,300,400<br><sub>!1.39x</sub> | -- |
+| 4 | 5,265,278<br><sub>!2.00x</sub> | -- |
+| 8 | 2,850,943<br><sub>!2.49x</sub> | -- |
+| 16 | 2,231,026<br><sub>!2.65x</sub> | -- |
 
 ### Disjoint/16-8-2
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL | zstm vs RSTM NOrec (word) |
-|---:|---:|---:|---:|---:|---:|
-| 1 | 21,473,089 | 14,296,682 | 13,158,204 | 17,718,900 | 1.50x |
-| 2 | 16,797,874 | 14,969,648 | 13,469,380 | 16,451,148 | 1.12x |
-| 4 | 12,427,499 | 11,486,539 | 11,248,585 | 14,611,928 | 1.08x |
-| 8 | 6,226,414 | 6,171,821 | 7,704,192 | 13,477,274 | 1.01x |
-| 16 | 4,257,055 | 4,864,327 | 4,562,988 | 11,817,579 | 0.88x |
-| 24 | 4,062,504 | 3,555,645 | 3,370,665 | 9,507,749 | 1.14x |
+| threads | zstm (ALA) | zstm vs RSTM |
+|---:|---:|---:|
+| 1 | 20,220,194<br><sub>1.00x</sub> | -- |
+| 2 | 16,156,631<br><sub>1.06x</sub> | -- |
+| 4 | 12,599,254<br><sub>1.11x</sub> | -- |
+| 8 | 7,171,166<br><sub>1.23x</sub> | -- |
+| 16 | 4,735,292<br><sub>1.13x</sub> | -- |
 
 ## Scaling (throughput relative to that config at 1 thread)
 
 
 ### Counter
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 1.00x | 1.00x | 1.00x | 1.00x |
-| 2 | 0.19x | 0.28x | 0.23x | 0.63x |
-| 4 | 0.10x | 0.27x | 0.14x | 0.41x |
-| 8 | 0.06x | 0.11x | 0.09x | 0.33x |
-| 16 | 0.04x | 0.12x | 0.07x | 0.23x |
-| 24 | 0.04x | 0.06x | 0.06x | 0.31x |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 1.00x |
+| 2 | 0.17x |
+| 4 | 0.11x |
+| 8 | 0.06x |
+| 16 | 0.04x |
 
 ### ReadNWrite1/m256
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 1.00x | 1.00x | 1.00x | 1.00x |
-| 2 | 0.29x | 0.50x | 0.45x | 0.90x |
-| 4 | 0.24x | 0.33x | 0.29x | 0.81x |
-| 8 | 0.17x | 0.22x | 0.19x | 0.71x |
-| 16 | 0.15x | 0.17x | 0.15x | 0.41x |
-| 24 | 0.09x | 0.14x | 0.13x | 0.47x |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 1.00x |
+| 2 | 0.28x |
+| 4 | 0.18x |
+| 8 | 0.18x |
+| 16 | 0.15x |
 
 ### ReadNWrite1/m4096
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 1.00x | 1.00x | 1.00x | 1.00x |
-| 2 | 0.30x | 0.46x | 0.59x | 0.86x |
-| 4 | 0.21x | 0.30x | 0.38x | 0.74x |
-| 8 | 0.15x | 0.21x | 0.27x | 0.60x |
-| 16 | 0.14x | 0.16x | 0.20x | 0.49x |
-| 24 | 0.08x | 0.12x | 0.16x | 0.37x |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 1.00x |
+| 2 | 0.29x |
+| 4 | 0.23x |
+| 8 | 0.16x |
+| 16 | 0.14x |
 
 ### ReadWriteN/m256
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 1.00x | 1.00x | 1.00x | 1.00x |
-| 2 | 0.42x | 0.39x | 0.45x | 0.89x |
-| 4 | 0.25x | 0.24x | 0.38x | 0.85x |
-| 8 | 0.15x | 0.17x | 0.26x | 0.74x |
-| 16 | 0.12x | 0.13x | 0.22x | 0.50x |
-| 24 | 0.10x | 0.12x | 0.21x | 0.51x |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 1.00x |
+| 2 | 0.27x |
+| 4 | 0.20x |
+| 8 | 0.11x |
+| 16 | 0.08x |
 
 ### Disjoint/16-8-2
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 1.00x | 1.00x | 1.00x | 1.00x |
-| 2 | 0.78x | 1.05x | 1.02x | 0.93x |
-| 4 | 0.58x | 0.80x | 0.85x | 0.82x |
-| 8 | 0.29x | 0.43x | 0.59x | 0.76x |
-| 16 | 0.20x | 0.34x | 0.35x | 0.67x |
-| 24 | 0.19x | 0.25x | 0.26x | 0.54x |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 1.00x |
+| 2 | 0.80x |
+| 4 | 0.62x |
+| 8 | 0.35x |
+| 16 | 0.23x |
 
 ## Abort rate (aborts per committed transaction)
 
@@ -124,66 +114,63 @@ _RSTM CGL is a single global lock and never aborts._
 
 ### Counter
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 2 | 0.048 | 0.288 | 0.513 | 0.000 |
-| 4 | 0.316 | 0.173 | 1.120 | 0.000 |
-| 8 | 0.625 | 1.371 | 1.875 | 0.000 |
-| 16 | 0.768 | 1.214 | 2.977 | 0.000 |
-| 24 | 1.322 | 5.534 | 6.451 | 0.000 |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 0.000 |
+| 2 | 0.202 |
+| 4 | 0.234 |
+| 8 | 0.614 |
+| 16 | 0.798 |
 
 ### ReadNWrite1/m256
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 2 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 4 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 8 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 16 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 24 | 0.000 | 0.000 | 0.000 | 0.000 |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 0.000 |
+| 2 | 0.023 |
+| 4 | 0.067 |
+| 8 | 0.033 |
+| 16 | 0.038 |
 
 ### ReadNWrite1/m4096
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 2 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 4 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 8 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 16 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 24 | 0.000 | 0.000 | 0.000 | 0.000 |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 0.000 |
+| 2 | 0.001 |
+| 4 | 0.002 |
+| 8 | 0.008 |
+| 16 | 0.015 |
 
 ### ReadWriteN/m256
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 2 | 0.162 | 0.129 | 0.322 | 0.000 |
-| 4 | 0.429 | 0.415 | 0.838 | 0.000 |
-| 8 | 0.899 | 0.888 | 1.716 | 0.000 |
-| 16 | 1.664 | 1.724 | 3.373 | 0.000 |
-| 24 | 2.825 | 2.647 | 5.221 | 0.000 |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 0.000 |
+| 2 | 0.143 |
+| 4 | 0.348 |
+| 8 | 0.958 |
+| 16 | 1.711 |
 
 ### Disjoint/16-8-2
 
-| threads | zstm (ALA) | RSTM NOrec (word) | RSTM NOrec (int) | RSTM CGL |
-|---:|---:|---:|---:|---:|
-| 1 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 2 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 4 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 8 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 16 | 0.000 | 0.000 | 0.000 | 0.000 |
-| 24 | 0.000 | 0.000 | 0.000 | 0.000 |
+| threads | zstm (ALA) |
+|---:|---:|
+| 1 | 0.000 |
+| 2 | 0.000 |
+| 4 | 0.000 |
+| 8 | 0.000 |
+| 16 | 0.000 |
 
 ## Measurement spread
 
-_Max/min throughput across trials, worst cell per config. A large spread means the box was noisy and small differences should not be read as real._
+_6 of 25 cells reached 1.25x max/min across 5 trials and are marked `!` above. Differences at or below a cell's own spread are not results._
 
-| config | worst spread | where |
-|---|---:|---|
-| zstm (ALA) | 1.51x | Counter p=2 |
-| RSTM NOrec (word) | 3.17x | Counter p=16 |
-| RSTM NOrec (int) | 1.37x | Disjoint/16-8-2 p=8 |
-| RSTM CGL | 1.98x | Counter p=2 |
+| spread | workload | threads | config |
+|---:|---|---:|---|
+| 2.65x | ReadWriteN/m256 | 16 | zstm (ALA) |
+| 2.49x | ReadWriteN/m256 | 8 | zstm (ALA) |
+| 2.00x | ReadWriteN/m256 | 4 | zstm (ALA) |
+| 1.44x | ReadNWrite1/m256 | 4 | zstm (ALA) |
+| 1.39x | ReadWriteN/m256 | 2 | zstm (ALA) |
+| 1.26x | ReadNWrite1/m4096 | 4 | zstm (ALA) |
