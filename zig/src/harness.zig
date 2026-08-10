@@ -136,21 +136,8 @@ pub fn Runner(comptime Bench: type) type {
             var tx: zstm.Tx = .init(alloc, &stm, cfg.mode);
             defer tx.deinit();
 
-            // Pre-size the read log and write set so the timed region performs
-            // no allocation. `Tx.reset` uses clearRetainingCapacity, so this
-            // capacity survives every transaction. RSTM's MiniVector/WriteSet
-            // are likewise preallocated, so this equalizes the two rather than
-            // favoring either.
-            //
-            // Size these to the workload's *actual* maximum, never larger.
-            // zstm's write set is a std.AutoHashMapUnmanaged, whose
-            // clearRetainingCapacity memsets the entire metadata array -- so
-            // reset cost scales with the capacity reserved, not with the number
-            // of entries used. (RSTM's WriteSet resets in O(1) via a version
-            // stamp; see include/stm/WriteSet.hpp:452.) Over-reserving here
-            // would tax every transaction and understate zstm by ~20x.
             tx.reads.ensureTotalCapacity(alloc, Bench.maxReads()) catch @panic("oom");
-            tx.writes.growList(alloc, @intCast(Bench.maxWrites())) catch @panic("oom");
+            tx.writes.ensureCapacity(alloc, @intCast(Bench.maxWrites())) catch @panic("oom");
 
             var aborts: u64 = 0;
             var count: u32 = 0;

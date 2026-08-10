@@ -28,7 +28,7 @@ machine come to about 50 minutes.
 | `Counter` | One shared word. Every transaction conflicts with every other; commit-path cost and abort behavior. |
 | `ReadNWrite1` | `-O` random reads, then one write. Read-mostly; read log grows, write set holds one entry. |
 | `ReadWriteN` | `-O` reads then `-O` writes. Write-heavy; write-set insert and commit-time writeback. |
-| `Disjoint` | Per-thread private, cache-line-padded buffers, so transactions never conflict; instrumentation overhead. |
+| `Disjoint` | Switch between reads and writes every other transation; commit-contention. |
 
 ## Comparision Validity
 
